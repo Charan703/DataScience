@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import os
 import numpy as np
 import pandas as pd
+import yaml
 from src.Data_Science.pipeline.prediction_pipeline import PredictionPipeline
 
 app = Flask(__name__)
@@ -15,8 +16,21 @@ def training_page():
     if request.method == 'POST':
         # Validate training parameters
         try:
-            alpha = float(request.form['alpha'])
-            l1_ratio = float(request.form['l1_ratio'])
+            alpha = float(request.form.get('alpha', 0.5))
+            l1_ratio = float(request.form.get('l1_ratio', 0.5))
+            
+            # Update params.yaml with new values
+            import yaml
+            params_path = 'params.yaml'
+            with open(params_path, 'r') as file:
+                params = yaml.safe_load(file)
+            
+            params['ElasticNet']['alpha'] = alpha
+            params['ElasticNet']['l1_ratio'] = l1_ratio
+            
+            with open(params_path, 'w') as file:
+                yaml.dump(params, file, default_flow_style=False)
+            
             # Store parameters and proceed with training
             os.system("python main.py")
             return render_template('training.html', training_success='Model training completed successfully!', show_form=False)
