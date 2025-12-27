@@ -16,8 +16,9 @@ This project implements a complete **Machine Learning pipeline** for predicting 
 - 🔄 **Automated ML Pipeline** - End-to-end workflow from data ingestion to model deployment 
 - 📈 **Data Validation** - Comprehensive data quality checks and schema validation
 - 🔧 **Feature Engineering** - Advanced data transformation and preprocessing
-- 🤖 **Model Training** - Multiple algorithms with hyperparameter tuning
-- 📊 **Model Evaluation** - Detailed performance metrics and visualization
+- 🤖 **Model Training** - ElasticNet regression with hyperparameter tuning
+- 📊 **Model Evaluation** - Performance metrics with MLflow experiment tracking
+- 📈 **MLflow Integration** - Model versioning and experiment management with DagsHub
 - 🚀 **Web Interface** - Flask-based prediction API
 - 🐳 **Containerized** - Docker support for easy deployment
 
@@ -73,8 +74,11 @@ sequenceDiagram
     participant DI as DataIngestionPipeline
     participant DV as DataValidationPipeline
     participant DT as DataTransformationPipeline
+    participant MT as ModelTrainerPipeline
+    participant ME as ModelEvaluationPipeline
     participant C as Components
     participant A as Artifacts
+    participant ML as MLflow
     
     M->>DI: 1. Start Data Ingestion
     DI->>C: Load DataIngestion Component
@@ -90,6 +94,17 @@ sequenceDiagram
     DT->>C: Load DataTransformation Component
     C->>A: Transform & Preprocess
     DT-->>M: Complete
+    
+    M->>MT: 4. Start Model Training
+    MT->>C: Load ModelTrainer Component
+    C->>A: Train ElasticNet Model
+    MT-->>M: Complete
+    
+    M->>ME: 5. Start Model Evaluation
+    ME->>C: Load ModelEvaluation Component
+    C->>ML: Log Metrics & Model
+    C->>A: Save Evaluation Results
+    ME-->>M: Complete
 ```
 
 ### 🔄 Workflow Steps
@@ -99,8 +114,8 @@ sequenceDiagram
 | 1️⃣ | **Data Ingestion** - Download and extract wine quality dataset | ✅ |
 | 2️⃣ | **Data Validation** - Validate schema and data quality | ✅ |
 | 3️⃣ | **Data Transformation** - Feature engineering and preprocessing | ✅ |
-| 4️⃣ | **Model Training** - Train ML models with cross-validation | 🔄 |
-| 5️⃣ | **Model Evaluation** - Performance metrics and model comparison | 🔄 |
+| 4️⃣ | **Model Training** - Train ML models with cross-validation | ✅ |
+| 5️⃣ | **Model Evaluation** - Performance metrics and MLflow tracking | ✅ |
 
 ## 🛠️ Development Workflow
 
