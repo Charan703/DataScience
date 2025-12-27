@@ -32,13 +32,73 @@ graph LR
     E --> F[🚀 Deployment]
 ```
 
+## 📋 File Flow Architecture
+
+```mermaid
+graph TD
+    A[config.yaml] --> B[ConfigurationManager]
+    C[params.yaml] --> B
+    D[schema.yaml] --> B
+    
+    B --> E[DataIngestionConfig]
+    B --> F[DataValidationConfig]
+    B --> G[DataTransformationConfig]
+    
+    E --> H[DataIngestion Component]
+    F --> I[DataValidation Component]
+    G --> J[DataTransformation Component]
+    
+    H --> K[DataIngestionTrainingPipeline]
+    I --> L[DataValidationTrainingPipeline]
+    J --> M[DataTransformationTrainingPipeline]
+    
+    K --> N[main.py]
+    L --> N
+    M --> N
+    
+    N --> O[artifacts/]
+    O --> P[data_ingestion/]
+    O --> Q[data_validation/]
+    O --> R[data_transformation/]
+    
+    S[app.py] --> T[Flask Web Interface]
+    O --> T
+```
+
+## 🔄 Component Interaction Flow
+
+```mermaid
+sequenceDiagram
+    participant M as main.py
+    participant DI as DataIngestionPipeline
+    participant DV as DataValidationPipeline
+    participant DT as DataTransformationPipeline
+    participant C as Components
+    participant A as Artifacts
+    
+    M->>DI: 1. Start Data Ingestion
+    DI->>C: Load DataIngestion Component
+    C->>A: Download & Extract Data
+    DI-->>M: Complete
+    
+    M->>DV: 2. Start Data Validation
+    DV->>C: Load DataValidation Component
+    C->>A: Validate Schema & Quality
+    DV-->>M: Complete
+    
+    M->>DT: 3. Start Data Transformation
+    DT->>C: Load DataTransformation Component
+    C->>A: Transform & Preprocess
+    DT-->>M: Complete
+```
+
 ### 🔄 Workflow Steps
 
 | Step | Description | Status |
 |------|-------------|--------|
 | 1️⃣ | **Data Ingestion** - Download and extract wine quality dataset | ✅ |
-| 2️⃣ | **Data Validation** - Validate schema and data quality | 🔄 |
-| 3️⃣ | **Data Transformation** - Feature engineering and preprocessing | 🔄 |
+| 2️⃣ | **Data Validation** - Validate schema and data quality | ✅ |
+| 3️⃣ | **Data Transformation** - Feature engineering and preprocessing | ✅ |
 | 4️⃣ | **Model Training** - Train ML models with cross-validation | 🔄 |
 | 5️⃣ | **Model Evaluation** - Performance metrics and model comparison | 🔄 |
 
@@ -143,7 +203,7 @@ docker run -p 8080:8080 wine-quality-predictor
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU Affero General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
